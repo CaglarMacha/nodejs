@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const Categories = require("../db/models/Categories");
 const Response = require("../lib/Response");
-const Response = require("../lib/Response");
 const CustomError = require("../lib/Error");
 // router.get("/", (req, res, next) => {
 //     res.json({
