@@ -13,27 +13,48 @@ const Enum = require("../config/Enum");
 //     })
 // });
 
+router.get("/", async (req, res, next) => {
+  try {
+    var categories = await Categories.find({});
 
-router.get("/", async(req, res, next) => {
-    try {
-        let categories = await Categories.find({})
+    return res.json(Response.successsResponse(categories));
+  } catch (error) {
+    // res.json(Response.errorResponse(error))
+    return res.json(Response.successsResponse(categories));
+  }
+});
 
-        return res.json(Response.successsResponse(categories));
-    } catch (error) {
-        // res.json(Response.errorResponse(error))
-    }
-})
+router.post("/add", async (req, res) => {
+  let body = req.body;
+  try {
+    if (!body.name)
+      throw new CustomError(Enum.HTTP_CODES.BAD_REQUEST, "Validation error");
 
-router.post("/add", async(req, res) =>  {
-    let body = req.body
-    try {
-        if(!body.name) throw new CustomError(Enum.HTTP_CODES.BAD_REQUEST);
-    } catch (error) {
-        
-    }
-})
+    let category = new Categories({
+      name: body.name,
+      is_active: true,
+      created_by: req.user?.id,
+    });
+    await category.save();
 
+    res.json(Response.successsResponse({ response: true }));
+  } catch (error) {
+    // let errorResponse = Response.errorResponse(error);
+    // res.status(errorResponse.code).json(errorResponse);
+  }
+});
 
+router.put("/update", async (req, res) => {
+  let body = req.body;
+  try {
+    if (!body._id)
+        throw new CustomError(Enum.HTTP_CODES.BAD_REQUEST, "Validation error");
+    let updates = {};
+    if (body.name) updates.name = body.name;
+    if (typeof body.is_active === "boolean") updates.is_active = body.is_active; // === tip kontrolü
 
+    await categories.updateOne({ _id: body._id }, updates);
+  } catch (error) {}
+});
 
 module.exports = router;
