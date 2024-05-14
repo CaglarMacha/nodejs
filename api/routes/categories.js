@@ -3,6 +3,7 @@ const router = express.Router();
 const Categories = require("../db/models/Categories");
 const Response = require("../lib/Response");
 const CustomError = require("../lib/Error");
+const Enum = require("../config/Enum");
 // router.get("/", (req, res, next) => {
 //     res.json({
 //         body:req.body,
@@ -11,7 +12,6 @@ const CustomError = require("../lib/Error");
 //         headers:req.headers
 //     })
 // });
-
 
 
 router.get("/", async(req, res, next) => {
@@ -27,7 +27,7 @@ router.get("/", async(req, res, next) => {
 router.post("/add", async(req, res) =>  {
     let body = req.body
     try {
-        if(!body.name) throw new CustomError();
+        if(!body.name) throw new CustomError(Enum.HTTP_CODES.BAD_REQUEST);
     } catch (error) {
         
     }
